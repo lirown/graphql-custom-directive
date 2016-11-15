@@ -1,0 +1,52 @@
+{
+  "name": "graphql-custom-directive",
+  "version": "0.1.8",
+  "description": "A custom directive for GraphQL with the ability to hook the query execution",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "build-watch": "babel src --watch --out-dir dist",
+    "clear": "rm -rf ./dist ./coverage ./.nyc_output",
+    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "nyc": "nyc npm test && nyc report --reporter=lcov",
+    "retest": "npm run clear && npm test",
+    "pretest": "npm run build",
+    "start": "npm test",
+    "test": "mocha",
+    "test-watch": "mocha --watch",
+    "update-D": "npm install --save-dev babel-cli@latest babel-preset-es2015@latest babel-preset-stage-0@latest babel-register@latest chai@latest chai-as-promised@latest coveralls@latest graphql@latest mocha@latest nyc@latest",
+    "watch": "npm run build-watch & npm run test-watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lirown/graphql-custom-directive.git"
+  },
+  "keywords": [
+    "graphql",
+    "directive"
+  ],
+  "author": "Liron Goldenberg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lirown/graphql-custom-directive/issues"
+  },
+  "homepage": "https://github.com/lirown/graphql-custom-directive#readme",
+  "peerDependencies": {
+    "graphql": "*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "babel-register": "^6.16.3",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "coveralls": "^2.11.14",
+    "eslint": "^3.8.0",
+    "eslint-config-google": "^0.7.0",
+    "graphql": "*",
+    "mocha": "^3.1.2",
+    "nyc": "^8.3.1"
+  }
+}
