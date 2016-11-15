@@ -1,7 +1,7 @@
 {
   "name": "graphql-custom-directive",
-  "version": "0.1.8",
-  "description": "A custom directive for GraphQL with the ability to hook the query execution",
+  "version": "0.1.9",
+  "description": "A custom directive for GraphQL which hooks the query or schema execution",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
