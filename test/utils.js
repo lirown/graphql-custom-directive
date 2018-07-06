@@ -21,6 +21,7 @@ const _runQuery = function({
   passServer = false,
   done,
   context,
+  variables,
 }) {
   let executionSchema = buildSchema(schema || DEFAULT_TEST_SCHEMA);
 
@@ -43,7 +44,7 @@ const _runQuery = function({
 
   applySchemaCustomDirectives(executionSchema);
 
-  return graphql(executionSchema, query, input, context);
+  return graphql(executionSchema, query, input, context, variables);
 };
 
 exports.testEqual = function({
@@ -51,6 +52,7 @@ exports.testEqual = function({
   query,
   schema,
   input,
+  variables,
   passServer = false,
   expected,
   done,
@@ -61,6 +63,7 @@ exports.testEqual = function({
     query,
     schema,
     input,
+    variables,
     passServer,
     done,
     context,

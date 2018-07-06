@@ -165,15 +165,26 @@ describe('GraphQLCustomDirective', () => {
 
   it('expected directive to handle complex argument types', done => {
     const query = `{ value @duplicate(opts: [{againBy:2} {againBy:2}]) }`,
-      schema = `
-type Query { value: String } schema { query: Query }
-type TestOption { againBy: Int }
-`,
+      schema = `type Query { value: String } schema { query: Query }`,
       input = {value: 'test'},
       directives = [GraphQLTestDirective],
       expected = {value: 'test test test test test test test test'};
 
     testEqual({directives, query, schema, input, expected, done});
+  });
+
+  it('expected directive to handle multiple arguments and variables', done => {
+    const query = `
+query TestVariables($by: Int) {
+  value @duplicate(by: $by, opts: [{againBy:2}])
+}`,
+      schema = 'type Query { value(input: Int): String } schema { query: Query }',
+      input = {value: 'test'},
+      variables = {by: 3},
+      directives = [GraphQLTestDirective],
+      expected = {value: 'test test test test test test'};
+
+    testEqual({schema, directives, query, input, variables, expected, done});
   });
 
   it('expected directive to alter execution of graphql and result null', done => {
