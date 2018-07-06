@@ -1,5 +1,5 @@
 import {GraphQLDirective} from 'graphql/type/directives';
-import {GraphQLSchema, parse} from 'graphql';
+import {GraphQLSchema, getDirectiveValues} from 'graphql';
 
 const DEFAULT_DIRECTIVES = ['skip', 'include'];
 
@@ -28,20 +28,22 @@ function resolveWithDirective(resolve, source, directive, context, info) {
     d => directive.name.value === d.name,
   )[0];
 
-  let args = {};
-
-  for (let arg of directive.arguments) {
-    args[arg.name.value] = arg.value.value;
-  }
+  const args = getDirectiveValues(
+    directiveConfig,
+    {
+      directives: [directive],
+    },
+    info.variableValues
+  );
 
   return directiveConfig.resolve(resolve, source, args, context, info);
 }
 
 /**
- * parse directives from a schema defenition form them as graphql directive structure
+ * parse directives from a schema definition into directive AST nodes
  */
 function parseSchemaDirectives(directives) {
-  let schemaDirectives = [];
+  let directiveNodes = [];
 
   if (
     !directives ||
@@ -52,22 +54,30 @@ function parseSchemaDirectives(directives) {
   }
 
   for (let directiveName in directives) {
-    let argsList = [],
-      args = '';
-
-    Object.keys(directives[directiveName]).map(key => {
-      argsList.push(`${key}:"${directives[directiveName][key]}"`);
-    });
-
-    if (argsList.length > 0) {
-      args = `(${argsList.join(',')})`;
+    let directiveArgNodes = [];
+    for (let argName in directives.args || []) {
+      const arg = directives.args[argName];
+      directiveArgNodes.push({
+        kind: 'InputValueDefinition',
+        description: arg.description,
+        name: arg.name,
+        type: arg.type,
+        defaultValue: arg.defaultValue,
+      });
     }
 
-    schemaDirectives.push(`@${directiveName}${args}`);
+    directiveNodes.push({
+      kind: 'DirectiveDefinition',
+      description: directives[directiveName].description,
+      name: {
+        kind: 'Name',
+        value: directiveName,
+      },
+      arguments: directiveArgNodes,
+    });
   }
 
-  return parse(`{ a: String ${schemaDirectives.join(' ')} }`).definitions[0]
-    .selectionSet.selections[0].directives;
+  return directiveNodes;
 }
 
 /**
