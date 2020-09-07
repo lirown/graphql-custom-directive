@@ -23,7 +23,7 @@ function defaultResolveFn(source, args, context, info) {
  * resolving field using directive resolver
  */
 function resolveWithDirective(resolve, source, directive, context, info) {
-  source = source || ((info || {}).variableValues || {}).input_0 || {};
+  source = source || ((info || {}).variableValues || {}).input_0 || ((info || {}).variableValues || {}).input || {};
   let directiveConfig = info.schema._directives.filter(
     d => directive.name.value === d.name,
   )[0];
